@@ -104,16 +104,31 @@ const convertUnits = (kelvin) => {
   return { fahrenheit, celsius };
 };
 // Display data
-const displayData = (data) => {
+const displayData = (json) => {
   const locationOuput = document.querySelector('#location');
   const currentTempOutput = document.querySelector('#current-temperature');
-  const scaleToggle = document.querySelector('.scale');
-  // checked is C, unchecked is F
-  const getScale = () => scaleToggle.checked;
   const weatherImgOutput = document.querySelector('#weather-image');
   const descriptionOutput = document.querySelector('#description');
   const highOutput = document.querySelector('#high');
   const lowOutput = document.querySelector('#low');
+  const scaleToggle = document.querySelector('.scale');
+  // checked is C, unchecked is F
+  const getScale = () => scaleToggle.checked;
+
+  const data = {
+    lat: json.coord.lat,
+    lon: json.coord.lon,
+    main: json.weather.main,
+    description: json.weather.description,
+    temp: json.main.temp,
+    high: json.main.temp_max,
+    low: json.main.temp_min,
+    sunrise: json.sys.sunrise,
+    sunset: json.sys.sunset,
+    locationName: json.name,
+  }
+
+  locationOuput.textContent = data.
 };
 // Change background and images based on data
 
