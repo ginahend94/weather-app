@@ -1,3 +1,4 @@
+const format = require('date-fns/format');
 //TODO - Default to Nashville
 
 // Grab DOM elements and query
@@ -139,7 +140,9 @@ const displayData = (json) => {
 };
 
 const clock = () => {
+
   const today = new Date();
+  const updateClock = () =>
 }
 
 // Change background and images based on data
