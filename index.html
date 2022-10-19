@@ -10,24 +10,21 @@
   </head>
   <body>
     <header>
-        <label>
-            F
-            <input class="scale" type="checkbox">
-            C
-        </label>
+      <label>
+        F
+        <input class="scale-toggle" type="checkbox" />
+        C
+      </label>
     </header>
     <main>
+      <span class="date">Tuesday, October 18, 2022</span>
       <span class="time">11:57 <small>AM</small></span>
       <output>
         <span id="location">Nashville, TN</span>
         <span id="current-temperature">
-            60&deg;<span class="scale">F</span>
+          60&deg;<span class="scale">F</span>
         </span>
-        <img
-          id="weather-image"
-          src="https://i.pinimg.com/originals/ac/6e/06/ac6e06f77344e757114f4b3ac9fdd79c.gif"
-          alt="Sunny"
-        />
+        <img id="weather-image" src="#" alt="Sunny" />
         <!--TEST-->
         <span id="description">Sunny</span>
         <span id="high">75</span>&deg; / <span id="low">55</span>&deg;
@@ -38,9 +35,9 @@
           <button id="submit">Go</button>
         </form>
         <div class="autocomplete-container">
-            <ul class="autocomplete-list">
-                <li>Results will go here</li>
-            </ul>
+          <ul class="autocomplete-list">
+            <li>Results will go here</li>
+          </ul>
         </div>
       </div>
     </main>

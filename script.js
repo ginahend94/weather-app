@@ -1,10 +1,9 @@
-// Default to Nashville
+//TODO - Default to Nashville
 
 // Grab DOM elements and query
 const locationInputForm = document.querySelector('.location-input');
 const locationInput = locationInputForm.querySelector('input');
 const locationSubmit = document.querySelector('#submit');
-//NOTE - when displaying location, either put CITY, STATE or CITY, COUNTRY
 
 let query;
 const getInput = () => locationInput.value;
@@ -14,7 +13,7 @@ const setQuery = (location) => {
 };
 const setQueryText = (text) => (locationInput.value = text);
 locationSubmit.addEventListener('click', () => {
-  getWeather(query?.lat, query?.lon).then((data) => console.log(data));
+  getWeather(query).then((data) => console.log(data));
 });
 
 locationInput.addEventListener('input', () => {
@@ -85,13 +84,12 @@ const autocomplete = (() => {
 })();
 
 // Call API
-const getWeather = async (lat, lon) => {
-  if (!lat || !lon) {
-    console.log('no input');
-    return;
+const getWeather = async (query) => {
+  if (!query?.lat || !query?.lon || !query) {
+    return console.error('no input');
   }
   const key = '2db6a02c5ebe70c03c3c00caa4802366';
-  // const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}`;
+  // const url = `https://api.openweathermap.org/data/2.5/weather?lat=${query.lat}&lon=${query.lon}&appid=${key}`;
   const url = 'test-weather.json'; // ANCHOR - TEST
   // Process JSON data
   const res = await fetch(url);
@@ -111,7 +109,8 @@ const displayData = (json) => {
   const descriptionOutput = document.querySelector('#description');
   const highOutput = document.querySelector('#high');
   const lowOutput = document.querySelector('#low');
-  const scaleToggle = document.querySelector('.scale');
+  const scaleOutput = document.querySelector('.scale');
+  const scaleToggle = document.querySelector('.scale-toggle');
   // checked is C, unchecked is F
   const getScale = () => scaleToggle.checked;
 
@@ -126,10 +125,23 @@ const displayData = (json) => {
     sunrise: json.sys.sunrise,
     sunset: json.sys.sunset,
     locationName: json.name,
-  }
+  };
 
-  locationOuput.textContent = data.
+  //NOTE - when displaying location, either put CITY, STATE or CITY, COUNTRY
+  locationOuput.innerHTML = `${query.name}, <small>${
+    query.state ? query.state : query.country
+  }</small>`;
+  currentTempOutput.textContent = data.temp;
+  weatherImgOutput.src = 'https://i.pinimg.com/originals/ac/6e/06/ac6e06f77344e757114f4b3ac9fdd79c.gif' //ANCHOR - TEST
+  descriptionOutput.textContent = data.description;
+  highOutput.textContent = data.high;
+  lowOutput.textContent = data.low;
 };
+
+const clock = () => {
+  const today = new Date();
+}
+
 // Change background and images based on data
 
 // TODO - make cute lofi/anime theme
