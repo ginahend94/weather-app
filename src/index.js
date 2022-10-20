@@ -1,6 +1,8 @@
-import { format } from 'date-fns';
+import clock from './components/clock';
 import 'normalize-css';
 import './style.css';
+
+clock();
 // TODO - Default to Nashville
 
 // Grab DOM elements and query
@@ -22,6 +24,62 @@ locationSubmit.addEventListener('click', () => {
 locationInput.addEventListener('input', () => {
   autocomplete.start();
 });
+// Call API
+const getWeather = async (data) => {
+  if (!data?.lat || !data?.lon || !data) {
+    return console.error('no input');
+  }
+  const key = '2db6a02c5ebe70c03c3c00caa4802366';
+  // const url = `https://api.openweathermap.org/data/2.5/weather?lat=${query.lat}&lon=${query.lon}&appid=${key}`;
+  const url = 'https://raw.githubusercontent.com/ginahend94/weather-app/master/src/test/test-weather.json'; // ANCHOR - TEST
+  // Process JSON data
+  const res = await fetch(url);
+  const json = await res.json();
+  return json;
+};
+const convertUnits = (kelvin) => {
+  const celsius = kelvin - 273.15;
+  const fahrenheit = 1.8 * celsius + 32;
+  return { fahrenheit, celsius };
+};
+// Display data
+const displayData = (json) => {
+  const locationOuput = document.querySelector('#location');
+  const currentTempOutput = document.querySelector('#current-temperature');
+  const weatherImgOutput = document.querySelector('#weather-image');
+  const descriptionOutput = document.querySelector('#description');
+  const highOutput = document.querySelector('#high');
+  const lowOutput = document.querySelector('#low');
+  const scaleOutput = document.querySelector('.scale');
+  const scaleToggle = document.querySelector('.scale-toggle');
+  // checked is C, unchecked is F
+  const getScale = () => scaleToggle.checked;
+
+  const data = {
+    lat: json.coord.lat,
+    lon: json.coord.lon,
+    main: json.weather.main,
+    description: json.weather.description,
+    temp: json.main.temp,
+    high: json.main.temp_max,
+    low: json.main.temp_min,
+    sunrise: json.sys.sunrise,
+    sunset: json.sys.sunset,
+    locationName: json.name,
+  };
+
+  // NOTE - when displaying location, either put CITY, STATE or CITY, COUNTRY
+  locationOuput.innerHTML = `${query.name}, <small>${
+    query.state ? query.state : query.country
+  }</small>`;
+  currentTempOutput.textContent = data.temp;
+  weatherImgOutput.src =
+    'https://i.pinimg.com/originals/ac/6e/06/ac6e06f77344e757114f4b3ac9fdd79c.gif'; //ANCHOR - TEST
+  descriptionOutput.textContent = data.description;
+  highOutput.textContent = data.high;
+  lowOutput.textContent = data.low;
+};
+
 // TODO - add arrow functionality for selecting autocomplete
 
 const autocomplete = (() => {
@@ -30,7 +88,8 @@ const autocomplete = (() => {
   const newTimeout = () => {
     setTimeout(() => {
       // make api call
-      fakeCall(getLondon).then((res) => showResults(res)); // ANCHOR - TEST
+      getLocation();
+      // fakeCall(getLondon).then((res) => showResults(res)); // ANCHOR - TEST
     }, 500);
   };
   // if more input, clear timeout
@@ -85,78 +144,6 @@ const autocomplete = (() => {
   };
 
   return { start: restartTimeout };
-})();
-
-// Call API
-const getWeather = async (data) => {
-  if (!data?.lat || !data?.lon || !data) {
-    return console.error('no input');
-  }
-  const key = '2db6a02c5ebe70c03c3c00caa4802366';
-  // const url = `https://api.openweathermap.org/data/2.5/weather?lat=${query.lat}&lon=${query.lon}&appid=${key}`;
-  const url = './test/test-weather.json'; // ANCHOR - TEST
-  // Process JSON data
-  const res = await fetch(url);
-  const json = await res.json();
-  return json;
-};
-const convertUnits = (kelvin) => {
-  const celsius = kelvin - 273.15;
-  const fahrenheit = 1.8 * celsius + 32;
-  return { fahrenheit, celsius };
-};
-// Display data
-const displayData = (json) => {
-  const locationOuput = document.querySelector('#location');
-  const currentTempOutput = document.querySelector('#current-temperature');
-  const weatherImgOutput = document.querySelector('#weather-image');
-  const descriptionOutput = document.querySelector('#description');
-  const highOutput = document.querySelector('#high');
-  const lowOutput = document.querySelector('#low');
-  const scaleOutput = document.querySelector('.scale');
-  const scaleToggle = document.querySelector('.scale-toggle');
-  // checked is C, unchecked is F
-  const getScale = () => scaleToggle.checked;
-
-  const data = {
-    lat: json.coord.lat,
-    lon: json.coord.lon,
-    main: json.weather.main,
-    description: json.weather.description,
-    temp: json.main.temp,
-    high: json.main.temp_max,
-    low: json.main.temp_min,
-    sunrise: json.sys.sunrise,
-    sunset: json.sys.sunset,
-    locationName: json.name,
-  };
-
-  // NOTE - when displaying location, either put CITY, STATE or CITY, COUNTRY
-  locationOuput.innerHTML = `${query.name}, <small>${
-    query.state ? query.state : query.country
-  }</small>`;
-  currentTempOutput.textContent = data.temp;
-  weatherImgOutput.src =
-    'https://i.pinimg.com/originals/ac/6e/06/ac6e06f77344e757114f4b3ac9fdd79c.gif'; //ANCHOR - TEST
-  descriptionOutput.textContent = data.description;
-  highOutput.textContent = data.high;
-  lowOutput.textContent = data.low;
-};
-
-const clock = (() => {
-  const hours = document.querySelector('.hours');
-  const minutes = document.querySelector('.minutes');
-  const amPM = document.querySelector('.am-pm');
-  const date = document.querySelector('.date');
-  const updateClock = () => {
-    const today = new Date();
-    hours.textContent = format(today, 'h');
-    minutes.textContent = format(today, 'mm');
-    amPM.textContent = format(today, 'bbb');
-    date.textContent = format(today, 'PPPP');
-  };
-  updateClock();
-  setInterval(updateClock, 10);
 })();
 
 // Change background and images based on data
