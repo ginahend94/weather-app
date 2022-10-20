@@ -8,6 +8,5 @@ export default (() => {
   // bg img based on weather
   // animated sheep/small animal
   // tree/landscape
-  container.textContent = 'background';
   return container;
 })();
