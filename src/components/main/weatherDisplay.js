@@ -85,7 +85,6 @@ const displayData = (response) => {
     locationName: response.json.name,
     icon: response.json.weather[0].icon,
   };
-  console.log(data);
 
   // checked is C, unchecked is F
   const scale = header.getScale() ? 'c' : 'f';

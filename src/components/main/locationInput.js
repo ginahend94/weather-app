@@ -1,50 +1,6 @@
 import { getLocation, getWeather } from '../../functions/callOpenWeather';
 import { displayData } from './weatherDisplay';
 
-(() => {
-  const container = document.createElement('div');
-  const form = document.createElement('form');
-  const input = document.createElement('input');
-  const submit = document.createElement('button');
-  const autocompleteResponse = document.createElement('div');
-  let query;
-
-  container.classList.add('location-search');
-  form.classList.add('location-input');
-  input.placeholder = 'Enter a location';
-  submit.textContent = 'Go';
-  autocompleteResponse.classList.add('autocomplete-container');
-  autocompleteResponse.textContent = 'Autocomple results here';
-
-  container.append(form, autocompleteResponse);
-  form.append(input, submit);
-
-  const getInput = () => input.value;
-  const setInput = (text) => (input.value = text);
-  const getQuery = () => query;
-  const setQuery = (location) => (query = location);
-  const setQueryAndInput = (location) => {
-    setQuery(location);
-    setInput(location.string);
-  };
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    console.log(e);
-    console.log('submitted');
-  });
-
-  return {
-    form,
-    getInput,
-    setInput,
-    getQuery,
-    setQuery,
-    setQueryAndInput,
-    autocompleteResponse,
-  };
-})();
-
 const locationSearch = (() => {
   const locationContainer = document.createElement('div');
 
