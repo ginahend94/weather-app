@@ -6,7 +6,7 @@ import footer from './footer/footer';
 export default () => {
   document.body.append(
     background,
-    header,
+    header.container,
     main,
     footer,
   );

@@ -77,7 +77,7 @@ const locationSearch = (() => {
           json: res,
         };
         displayData(data);
-        console.log(data)
+        console.log(data);
       });
       console.log('submitted');
     });

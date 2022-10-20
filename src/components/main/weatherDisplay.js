@@ -1,13 +1,29 @@
-export default (() => {
-  const container = document.createElement('output');
+import header from "../header/header";
+
+const weatherDisplay = (() => {
+  const container = document.createElement('div');
   container.textContent = 'Weather module';
-  const locationOuput = document.createElement('div');
-  const currentTempOutput = document.createElement('div');
-  const weatherImgOutput = document.createElement('div');
-  const descriptionOutput = document.createElement('div');
-  const highOutput = document.createElement('div');
-  const lowOutput = document.createElement('div');
-  const scaleOutput = document.createElement('div');
+  const locationOuput = document.createElement('h2');
+  const currentTempOutput = document.createElement('h3');
+  const scaleOutput = document.createElement('span');
+  const weatherImgOutput = document.createElement('img');
+  const descriptionOutput = document.createElement('p');
+  const highOutput = document.createElement('span');
+  const lowOutput = document.createElement('span');
+
+  const setLocationOutput = (text) => (locationOuput.textContent = text);
+  const setCurrentTempOutput = (text) => (currentTempOutput.textContent = text);
+  const setScaleOutput = (text) => (scaleOutput.textContent = text);
+  const setWeatherImgSrc = (text) => (weatherImgOutput.src = text);
+  const setWeatherImgAltText = (text) => (weatherImgOutput.alt = text);
+  const setWeatherImgTitle = (text) => (weatherImgOutput.title = text);
+  const setWeatherImgAltAndTitle = (text) => {
+    setWeatherImgAltText(text);
+    setWeatherImgTitle(text);
+  };
+  const setDescriptionOutput = (text) => (descriptionOutput.textContent = text);
+  const setHighOutput = (text) => (highOutput.textContent = text);
+  const setLowOutput = (text) => (lowOutput.textContent = text);
 
   container.append(
     locationOuput,
@@ -19,20 +35,21 @@ export default (() => {
     scaleOutput,
   );
 
-  return container;
+  return {
+    container,
+    setLocationOutput,
+    setCurrentTempOutput,
+    setScaleOutput,
+    setWeatherImgSrc,
+    setWeatherImgAltAndTitle,
+    setDescriptionOutput,
+    setHighOutput,
+    setLowOutput,
+  };
 })();
 
 // Display data
 const displayData = (response) => {
-  // checked is C, unchecked is F
-  const getScale = () => scaleToggle.checked;
-
-  const convertUnits = (kelvin) => {
-    const celsius = kelvin - 273.15;
-    const fahrenheit = 1.8 * celsius + 32;
-    return { fahrenheit, celsius };
-  };
-
   const data = {
     lat: response.json.coord.lat,
     lon: response.json.coord.lon,
@@ -46,21 +63,32 @@ const displayData = (response) => {
     locationName: response.json.name,
   };
 
-  // NOTE - when displaying location, either put CITY, STATE or CITY, COUNTRY
-  locationOuput.innerHTML = `${response.query.name}, <small>${
-    response.query.state ? response.query.state : response.query.country
-  }</small>`;
-  currentTempOutput.textContent = data.temp;
-  weatherImgOutput.src =
-    'https://i.pinimg.com/originals/ac/6e/06/ac6e06f77344e757114f4b3ac9fdd79c.gif'; // TEST
-  descriptionOutput.textContent = data.description;
-  highOutput.textContent = data.high;
-  lowOutput.textContent = data.low;
+  // checked is C, unchecked is F
+  const scale = header.getScale() ? 'c' : 'f';
 
-  if (scaleToggle.checked) {
-    console.log(scaleToggle.checked);
-  }
+  const convertUnits = (kelvin) => {
+    const c = kelvin - 273.15;
+    const f = 1.8 * c + 32;
+    return { f, c };
+  };
+
+  const convertedTemp = (() => convertUnits(data.temp))();
+  const convertedHigh = (() => convertUnits(data.high))();
+  const convertedLow = (() => convertUnits(data.low))();
+
+  // NOTE - when displaying location, either put CITY, STATE or CITY, COUNTRY
+  weatherDisplay.setLocationOutput(`${response.query.name}, ${
+    response.query.state ? response.query.state : response.query.country
+  }`);
+  weatherDisplay.setCurrentTempOutput(convertedTemp[scale]);
+  weatherDisplay.setScaleOutput(scale.toUpperCase());
+  weatherDisplay.setWeatherImgSrceatherImgOutput('https://i.pinimg.com/originals/ac/6e/06/ac6e06f77344e757114f4b3ac9fdd79c.gif'); // TEST
+  weatherDisplay.setDescriptionOutput(data.description);
+  weatherDisplay.setHighOutput(convertedHigh[scale]);
+  weatherDisplay.setLowOutput(convertedLow[scale]);
+
   console.log(data);
 };
 
+export default weatherDisplay;
 export { displayData };
