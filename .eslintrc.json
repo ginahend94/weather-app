@@ -13,6 +13,7 @@
     "quotes": ["error", "single"],
     "linebreak-style": "off",
     "indent": ["error", 2],
-    "no-return-assign": ["error", "except-parens"]
+    "no-return-assign": ["error", "except-parens"],
+    "operator-linebreak":"off"
   }
 }
