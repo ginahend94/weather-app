@@ -7,7 +7,6 @@ import radio from './radio';
 
 export default (() => {
   const container = document.createElement('main');
-  container.textContent = 'main';
   container.append(
     weatherDisplay.container,
     locationInput.container,

@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 
 export default (() => {
   const container = document.createElement('div');
+  container.classList.add('clock');
   const time = document.createElement('span');
   container.append(time);
 

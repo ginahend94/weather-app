@@ -77,9 +77,8 @@ const locationSearch = (() => {
           json: res,
         };
         displayData(data);
-        console.log(data);
+        setInput(''); // clear input after
       });
-      console.log('submitted');
     });
     input.addEventListener('input', () => {
       if (!getInput()) return;
