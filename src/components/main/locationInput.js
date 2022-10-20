@@ -1,4 +1,5 @@
 import { getLocation, getWeather } from '../../functions/callOpenWeather';
+import { displayData } from './weatherDisplay';
 
 (() => {
   const container = document.createElement('div');
@@ -69,7 +70,15 @@ const locationSearch = (() => {
     container.addEventListener('submit', (e) => {
       e.preventDefault();
       if (!getQuery()) return;
-      console.log(getQuery());
+      // Call weather API
+      getWeather(getQuery()).then((res) => {
+        const data = {
+          query,
+          json: res,
+        };
+        displayData(data);
+        console.log(data)
+      });
       console.log('submitted');
     });
     input.addEventListener('input', () => {
@@ -169,7 +178,10 @@ const locationSearch = (() => {
     return { start: restartTimeout };
   })();
 
-  return { container: locationContainer };
+  return {
+    weather: form.weather,
+    container: locationContainer,
+  };
 })();
 
 export default locationSearch;
