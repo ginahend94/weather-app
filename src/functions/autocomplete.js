@@ -1,5 +1,4 @@
 import { getLocation } from './callOpenWeather';
-import { getInput, setQuery } from '../index';
 
 // TODO - add arrow functionality for selecting autocomplete
 
