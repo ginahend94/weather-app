@@ -7,7 +7,7 @@ import '../style.css';
 
 export default () => {
   document.body.append(
-    background,
+    background.container,
     header.container,
     main,
     footer,

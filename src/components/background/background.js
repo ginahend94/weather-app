@@ -8,10 +8,27 @@ export default (() => {
   // bg img based on weather
   // animated sheep/small animal
   // tree/landscape
+  const imgObj = {};
+  const importAll = (r) => {
+    const keys = r.keys();
+    const urls = r.keys().map(r);
+    return urls.forEach((url, i) => {
+      const key = keys[i].replace(/.\/|.jpg/g, '');
+      imgObj[key] = url;
+    });
+  };
+  importAll(
+    require.context('../../assets/images/weather-photos', false, /\.jpg$/)
+  );
+  // console.log(imgObj);
 
   const changeBackground = (url) => {
-    console.log(container.style.backgroundImage);
+    container.style.backgroundImage = `url(${url})`;
   };
 
-  return container;
+  return {
+    container,
+    changeBackground,
+    images: imgObj,
+  };
 })();

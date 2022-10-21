@@ -1,4 +1,5 @@
 import header from '../header/header';
+import background from '../background/background';
 // TODO - set up call for nashville, TN
 // add client location option
 const weatherDisplay = (() => {
@@ -24,7 +25,7 @@ const weatherDisplay = (() => {
   hiLo.classList.add('high-low');
 
   const setLocationOutput = (text) => (locationOuput.textContent = text);
-  const setCurrentTempOutput = (text) => (currentTempOutput.textContent = `${text}${deg}`);
+  const setCurrentTempOutput = (text) => (currentTempOutput.textContent = `${text}${deg}${scaleOutput.textContent}`);
   const setScaleOutput = (text) => (scaleOutput.textContent = text);
   const setWeatherImgSrc = (text) => (weatherImgOutput.src = text);
   const setWeatherImgAltText = (text) => (weatherImgOutput.alt = text);
@@ -100,14 +101,13 @@ const displayData = (response) => {
   const convertedHigh = (() => convertUnits(data.high))();
   const convertedLow = (() => convertUnits(data.low))();
 
-  // NOTE - when displaying location, either put CITY, STATE or CITY, COUNTRY
   weatherDisplay.setLocationOutput(
     `${response.query.name}, ${
       response.query.state ? response.query.state : response.query.country
     }`
   );
   weatherDisplay.setCurrentTempOutput(convertedTemp[scale]);
-  weatherDisplay.setScaleOutput(scale.toUpperCase());
+  weatherDisplay.setScaleOutput(scale);
   weatherDisplay.setWeatherImgSrc(
     `http://openweathermap.org/img/wn/${data.icon}@2x.png`
   ); // TEST
@@ -115,6 +115,7 @@ const displayData = (response) => {
   weatherDisplay.setDescriptionOutput(data.description);
   weatherDisplay.setHighOutput(convertedHigh[scale]);
   weatherDisplay.setLowOutput(convertedLow[scale]);
+  background.changeBackground(background.images[data.icon]);
 };
 
 export default weatherDisplay;
