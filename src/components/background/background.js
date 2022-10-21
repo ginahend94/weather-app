@@ -26,6 +26,8 @@ export default (() => {
     container.style.backgroundImage = `url(${url})`;
   };
 
+  changeBackground(imgObj['03d']);
+
   return {
     container,
     changeBackground,
