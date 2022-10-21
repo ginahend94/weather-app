@@ -26,7 +26,10 @@ const weatherDisplay = (() => {
   lowOutput.title = 'Low';
   hiLo.classList.add('high-low');
 
-  const setLocationOutput = (text) => (locationOuput.textContent = text);
+  const setLocationOutput = (text) => {
+    locationOuput.textContent = text;
+    locationOuput.title = text;
+  };
   const setCurrentTempOutput = (text) => (currentTempOutput.textContent = `${text}${deg}${scaleOutput.textContent}`);
   const setScaleOutput = (text) => (scaleOutput.textContent = text);
   const setWeatherImgSrc = (text) => (weatherImgOutput.src = text);
