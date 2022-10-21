@@ -64,7 +64,7 @@ const weatherDisplay = (() => {
   setHighOutput('75');
   setLowOutput('55');
 
-  currentTempOutput.append(scaleOutput);
+  // currentTempOutput.append(scaleOutput);
   hiLo.append(highOutput, ' / ', lowOutput);
 
   container.append(
