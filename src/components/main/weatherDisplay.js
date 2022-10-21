@@ -13,6 +13,26 @@ const weatherDisplay = (() => {
   const highOutput = document.createElement('span');
   const lowOutput = document.createElement('span');
   const hiLo = document.createElement('div');
+  const unitSlider = (() => {
+    const label = document.createElement('label');
+    const input = document.createElement('input');
+    const slider = document.createElement('span');
+    const celsius = document.createElement('span');
+    const fahrenheit = document.createElement('span');
+
+    label.classList.add('unit-slider');
+    input.type = 'checkbox';
+    slider.classList.add('slider');
+    celsius.textContent = 'Celsius';
+    celsius.classList.add('celsius');
+    fahrenheit.textContent = 'Fahrenheit';
+    fahrenheit.classList.add('fahrenheit');
+
+    slider.append(celsius, fahrenheit);
+    label.append(input, slider);
+
+    return label;
+  })();
   const deg = '\u00B0';
 
   container.classList.add('weather-display');
@@ -31,8 +51,7 @@ const weatherDisplay = (() => {
     locationOuput.textContent = text;
     locationOuput.title = text;
   };
-  const setCurrentTempOutput = (text) =>
-    (currentTempOutput.textContent = `${text}${deg}`);
+  const setCurrentTempOutput = (text) => (currentTempOutput.textContent = `${text}${deg}`);
   const setScaleOutput = (text) => (scaleOutput.textContent = text);
   const setWeatherImgSrc = (text) => (weatherImgOutput.src = text);
   const setWeatherImgAltText = (text) => (weatherImgOutput.alt = text);
@@ -41,7 +60,7 @@ const weatherDisplay = (() => {
     setWeatherImgAltText(text);
     setWeatherImgTitle(text);
   };
-  const setDescriptionOutput = (text) => (descriptionOutput.textContent = text);
+  const setDescriptionOutput = (text) => (descriptionOutput.textContent = text.toLowerCase());
   const setHighOutput = (text) => (highOutput.textContent = `${text}${deg}`);
   const setLowOutput = (text) => (lowOutput.textContent = `${text}${deg}`);
   const clearOutputs = () => {
@@ -50,7 +69,7 @@ const weatherDisplay = (() => {
     setScaleOutput('');
     setWeatherImgSrc(loading);
     setWeatherImgAltAndTitle('Loading...');
-    setDescriptionOutput('');
+    setDescriptionOutput('Loading...');
     setHighOutput('');
     setLowOutput('');
   };
@@ -70,9 +89,10 @@ const weatherDisplay = (() => {
   container.append(
     locationOuput,
     currentTempOutput,
+    hiLo,
     weatherImgOutput,
     descriptionOutput,
-    hiLo
+    unitSlider,
   );
 
   return {
@@ -108,7 +128,7 @@ const displayData = (response) => {
   // checked is C, unchecked is F
   const scale = header.getScale() ? 'c' : 'f';
 
-  // convert to limit API calls
+  // convert in app to limit API calls
   const convertUnits = (kelvin) => {
     const c = Math.round(kelvin - 273.15);
     const f = Math.round(1.8 * c + 32);
@@ -119,21 +139,25 @@ const displayData = (response) => {
   const convertedHigh = (() => convertUnits(data.high))();
   const convertedLow = (() => convertUnits(data.low))();
 
-  weatherDisplay.setLocationOutput(
-    `${response.query.name}, ${
-      response.query.state ? response.query.state : response.query.country
-    }`
-  );
-  weatherDisplay.setCurrentTempOutput(convertedTemp[scale]);
-  weatherDisplay.setScaleOutput(scale);
-  weatherDisplay.setWeatherImgSrc(
-    `http://openweathermap.org/img/wn/${data.icon}@2x.png`
-  );
-  weatherDisplay.setWeatherImgAltAndTitle(data.main);
-  weatherDisplay.setDescriptionOutput(data.description);
-  weatherDisplay.setHighOutput(convertedHigh[scale]);
-  weatherDisplay.setLowOutput(convertedLow[scale]);
-  background.changeBackground(background.images[data.icon]);
+  const showWeather = () => {
+    weatherDisplay.setLocationOutput(
+      `${response.query.name}, ${
+        response.query.state ? response.query.state : response.query.country
+      }`
+    );
+    weatherDisplay.setCurrentTempOutput(convertedTemp[scale]);
+    weatherDisplay.setScaleOutput(scale);
+    weatherDisplay.setWeatherImgSrc(
+      `http://openweathermap.org/img/wn/${data.icon}@2x.png`
+    );
+    weatherDisplay.setWeatherImgAltAndTitle(data.main);
+    weatherDisplay.setDescriptionOutput(data.description);
+    weatherDisplay.setHighOutput(convertedHigh[scale]);
+    weatherDisplay.setLowOutput(convertedLow[scale]);
+    background.changeBackground(background.images[data.icon]);
+  };
+
+  showWeather();
 };
 
 export default weatherDisplay;
