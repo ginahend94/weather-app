@@ -21,7 +21,9 @@ const weatherDisplay = (() => {
   weatherImgOutput.classList.add('weather-img');
   descriptionOutput.classList.add('description');
   highOutput.classList.add('high');
+  highOutput.title = 'High';
   lowOutput.classList.add('low');
+  lowOutput.title = 'Low';
   hiLo.classList.add('high-low');
 
   const setLocationOutput = (text) => (locationOuput.textContent = text);

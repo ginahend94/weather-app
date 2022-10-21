@@ -71,7 +71,7 @@ const locationSearch = (() => {
       const container = autocompleteContainer;
       // create ul for autocomplete list
       const ul = document.createElement('ul');
-      ul.classList.add('.autocomplete-list');
+      ul.classList.add('autocomplete-list');
 
       const showContainer = () => (container.style.display = 'block');
       const hideContainer = () => (container.style.display = 'none');
