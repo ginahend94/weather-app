@@ -8,9 +8,9 @@ import radio from './radio';
 export default (() => {
   const container = document.createElement('main');
   container.append(
+    locationInput.container,
     clock,
     weatherDisplay.container,
-    locationInput.container,
     // todoList,
     // calendar,
     // radio,

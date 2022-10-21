@@ -1,5 +1,5 @@
 import { getLocation, getWeather } from '../../functions/callOpenWeather';
-import { displayData } from './weatherDisplay';
+import weatherDisplay, { displayData } from './weatherDisplay';
 
 const locationSearch = (() => {
   const locationContainer = document.createElement('div');
@@ -27,6 +27,7 @@ const locationSearch = (() => {
       e.preventDefault();
       if (!getQuery()) return;
       // Call weather API
+      weatherDisplay.clearOutputs();
       getWeather(getQuery()).then((res) => {
         const data = {
           query,

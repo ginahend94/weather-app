@@ -1,4 +1,5 @@
 import header from '../header/header';
+import loading from '../../assets/images/loading_circle.gif';
 import background from '../background/background';
 // TODO - set up call for nashville, TN
 // add client location option
@@ -30,7 +31,8 @@ const weatherDisplay = (() => {
     locationOuput.textContent = text;
     locationOuput.title = text;
   };
-  const setCurrentTempOutput = (text) => (currentTempOutput.textContent = `${text}${deg}${scaleOutput.textContent}`);
+  const setCurrentTempOutput = (text) =>
+    (currentTempOutput.textContent = `${text}${deg}`);
   const setScaleOutput = (text) => (scaleOutput.textContent = text);
   const setWeatherImgSrc = (text) => (weatherImgOutput.src = text);
   const setWeatherImgAltText = (text) => (weatherImgOutput.alt = text);
@@ -42,6 +44,16 @@ const weatherDisplay = (() => {
   const setDescriptionOutput = (text) => (descriptionOutput.textContent = text);
   const setHighOutput = (text) => (highOutput.textContent = `${text}${deg}`);
   const setLowOutput = (text) => (lowOutput.textContent = `${text}${deg}`);
+  const clearOutputs = () => {
+    setLocationOutput('');
+    setCurrentTempOutput('');
+    setScaleOutput('');
+    setWeatherImgSrc(loading);
+    setWeatherImgAltAndTitle('Loading...');
+    setDescriptionOutput('');
+    setHighOutput('');
+    setLowOutput('');
+  };
 
   setLocationOutput('Nashville, TN');
   setCurrentTempOutput('60');
@@ -60,7 +72,7 @@ const weatherDisplay = (() => {
     currentTempOutput,
     weatherImgOutput,
     descriptionOutput,
-    hiLo,
+    hiLo
   );
 
   return {
@@ -73,6 +85,7 @@ const weatherDisplay = (() => {
     setDescriptionOutput,
     setHighOutput,
     setLowOutput,
+    clearOutputs,
   };
 })();
 
@@ -115,7 +128,7 @@ const displayData = (response) => {
   weatherDisplay.setScaleOutput(scale);
   weatherDisplay.setWeatherImgSrc(
     `http://openweathermap.org/img/wn/${data.icon}@2x.png`
-  ); // TEST
+  );
   weatherDisplay.setWeatherImgAltAndTitle(data.main);
   weatherDisplay.setDescriptionOutput(data.description);
   weatherDisplay.setHighOutput(convertedHigh[scale]);
