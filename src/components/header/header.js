@@ -7,7 +7,7 @@ export default (() => {
 
   const getScale = () => scaleToggle.checked;
 
-  container.append(title, scaleToggle);
+  container.append(title);
   return {
     container,
     getScale,
