@@ -8,5 +8,10 @@ export default (() => {
   // bg img based on weather
   // animated sheep/small animal
   // tree/landscape
+
+  const changeBackground = (url) => {
+    console.log(container.style.backgroundImage);
+  };
+
   return container;
 })();

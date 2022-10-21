@@ -20,7 +20,7 @@ const getWeather = async (data) => {
   }
   // const url = `https://api.openweathermap.org/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&appid=${key}`;
   const url = // TEST
-    'https://raw.githubusercontent.com/ginahend94/weather-app/master/src/test/test-weather.json'; // TEST
+     'https://raw.githubusercontent.com/ginahend94/weather-app/master/src/test/test-weather.json'; // TEST
   // Process JSON data
   try {
     const res = await fetch(url);

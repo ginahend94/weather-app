@@ -10,10 +10,10 @@ export default (() => {
   container.append(
     weatherDisplay.container,
     locationInput.container,
-    todoList,
-    calendar,
+    // todoList,
+    // calendar,
     clock,
-    radio,
+    // radio,
   );
   return container;
 })();
