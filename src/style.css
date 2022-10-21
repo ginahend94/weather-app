@@ -155,18 +155,44 @@ main {
 }
 
 .unit-slider .slider {
-  border: solid 1px;
-  /* padding: 5px; */
+  /* border: solid 1px; */
+  padding: 5px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  width:160px;
+  width:150px;
   height: 27px;
 }
 
 .unit-slider .slider::before {
   content: '';
-  
+  position: absolute;
+  left:-2px;
+  top:0;
+  display: block;
+  width: 60px;
+  transition: .2s;
+  border: solid 1px rgba(0,0, 0, .2);
+  height: 100%;
+  filter: drop-shadow(2px 2px 2px rgba(0,0,0,1));
+}
+.unit-slider input:checked + .slider::before {
+  width:90px;
+  transform: translateX(65px);
+}
+.slider .celsius {
+  opacity: 1;
+  transition: .2s;
+}
+.slider .fahrenheit {
+  opacity: .2;
+  transition: .2s;
+}
+.unit-slider input:checked + .slider .celsius {
+  opacity: .2;
+}
+.unit-slider input:checked + .slider .fahrenheit {
+  opacity: 1;
 }
 
 footer {
