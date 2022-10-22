@@ -143,6 +143,7 @@ const displayData = (response) => {
     locationName: response.weather.name,
     icon: response.weather.weather[0].icon,
     city: response.location.address.city,
+    suburb: response.location.address.suburb || null,
     state: response.location.address.state || null,
     country: response.location.address.country,
   };
@@ -167,7 +168,7 @@ const displayData = (response) => {
   const showWeather = () => {
     const units = scale();
     weatherDisplay.setLocationOutput(
-      `${data.city}, ${data.state ? data.state : data.country}`
+      `${data.suburb ? data.suburb : data.city}, ${data.state ? data.state : data.country}`
     );
     weatherDisplay.setCurrentTempOutput(convertedTemp[units]);
     weatherDisplay.setScaleOutput(units);
@@ -190,21 +191,18 @@ const displayData = (response) => {
 };
 
 (() => {
+  const initialWeather = (pos) => {
+    getWeather({
+      lat: pos.coords?.latitude || pos.lat,
+      lon: pos.coords?.longitude || pos.lon,
+    }).then((data) => displayData(data));
+  };
   navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      getWeather({
-        lat: pos.coords.latitude || 36.174465,
-        lon: pos.coords.longitude || -86.767960,
-      })
-        .then((data) => displayData(data));
-    },
-    // () => {
-    //   getWeather({
-    //     lat: 36.174465,
-    //     lon: -86.767960,
-    //   })
-    //     .then((data) => displayData(data));
-    // }
+    (pos) => initialWeather(pos),
+    () => initialWeather({
+      lat: 36.174465,
+      lon: -86.76796,
+    })
   );
 })();
 
