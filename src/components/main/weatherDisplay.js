@@ -1,6 +1,10 @@
-import header from '../header/header';
 import loading from '../../assets/images/loading_circle.gif';
 import background from '../background/background';
+import load from '../../functions/load';
+import save from '../../functions/save';
+import { getWeather } from '../../functions/callOpenWeather';
+import getLocationName from '../../functions/callOpenStreetMap';
+
 // TODO - set up call for nashville, TN
 // add client location option
 const weatherDisplay = (() => {
@@ -28,10 +32,23 @@ const weatherDisplay = (() => {
     fahrenheit.textContent = 'Fahrenheit';
     fahrenheit.classList.add('fahrenheit');
 
+    if (load('units')) {
+      console.log(load('units'));
+      console.log(load('units'));
+      input.checked = load('units');
+    } else save('units', input.checked);
+
+    const getScale = () => input.checked;
+
+    input.addEventListener('input', getScale);
+
     slider.append(celsius, fahrenheit);
     label.append(input, slider);
 
-    return label;
+    return {
+      label,
+      getScale,
+    };
   })();
   const deg = '\u00B0';
 
@@ -51,7 +68,8 @@ const weatherDisplay = (() => {
     locationOuput.textContent = text;
     locationOuput.title = text;
   };
-  const setCurrentTempOutput = (text) => (currentTempOutput.textContent = `${text}${deg}`);
+  const setCurrentTempOutput = (text) =>
+    (currentTempOutput.textContent = `${text}${deg}`);
   const setScaleOutput = (text) => (scaleOutput.textContent = text);
   const setWeatherImgSrc = (text) => (weatherImgOutput.src = text);
   const setWeatherImgAltText = (text) => (weatherImgOutput.alt = text);
@@ -60,7 +78,8 @@ const weatherDisplay = (() => {
     setWeatherImgAltText(text);
     setWeatherImgTitle(text);
   };
-  const setDescriptionOutput = (text) => (descriptionOutput.textContent = text.toLowerCase());
+  const setDescriptionOutput = (text) =>
+    (descriptionOutput.textContent = text.toLowerCase());
   const setHighOutput = (text) => (highOutput.textContent = `${text}${deg}`);
   const setLowOutput = (text) => (lowOutput.textContent = `${text}${deg}`);
   const clearOutputs = () => {
@@ -83,7 +102,6 @@ const weatherDisplay = (() => {
   setHighOutput('75');
   setLowOutput('55');
 
-  // currentTempOutput.append(scaleOutput);
   hiLo.append(highOutput, ' / ', lowOutput);
 
   container.append(
@@ -92,7 +110,7 @@ const weatherDisplay = (() => {
     hiLo,
     weatherImgOutput,
     descriptionOutput,
-    unitSlider,
+    unitSlider.label
   );
 
   return {
@@ -106,33 +124,40 @@ const weatherDisplay = (() => {
     setHighOutput,
     setLowOutput,
     clearOutputs,
+    unitSlider,
   };
 })();
 
 // Display data
 const displayData = (response) => {
   const data = {
-    lat: response.json.coord.lat,
-    lon: response.json.coord.lon,
-    main: response.json.weather[0].main,
-    description: response.json.weather[0].description,
-    temp: response.json.main.temp,
-    high: response.json.main.temp_max,
-    low: response.json.main.temp_min,
-    sunrise: response.json.sys.sunrise,
-    sunset: response.json.sys.sunset,
-    locationName: response.json.name,
-    icon: response.json.weather[0].icon,
+    lat: response.weather.coord.lat,
+    lon: response.weather.coord.lon,
+    main: response.weather.weather[0].main,
+    description: response.weather.weather[0].description,
+    temp: response.weather.main.temp,
+    high: response.weather.main.temp_max,
+    low: response.weather.main.temp_min,
+    sunrise: response.weather.sys.sunrise,
+    sunset: response.weather.sys.sunset,
+    locationName: response.weather.name,
+    icon: response.weather.weather[0].icon,
+    city: response.location.address.city,
+    state: response.location.address.state || null,
+    country: response.location.address.country,
   };
 
-  // checked is C, unchecked is F
-  const scale = header.getScale() ? 'c' : 'f';
+  // checked is F, unchecked is C
+  const scale = () => (weatherDisplay.unitSlider.getScale() ? 'f' : 'c');
 
   // convert in app to limit API calls
   const convertUnits = (kelvin) => {
     const c = Math.round(kelvin - 273.15);
     const f = Math.round(1.8 * c + 32);
-    return { f, c };
+    return {
+      f,
+      c,
+    };
   };
 
   const convertedTemp = (() => convertUnits(data.temp))();
@@ -140,25 +165,48 @@ const displayData = (response) => {
   const convertedLow = (() => convertUnits(data.low))();
 
   const showWeather = () => {
+    const units = scale();
     weatherDisplay.setLocationOutput(
-      `${response.query.name}, ${
-        response.query.state ? response.query.state : response.query.country
-      }`
+      `${data.city}, ${data.state ? data.state : data.country}`
     );
-    weatherDisplay.setCurrentTempOutput(convertedTemp[scale]);
-    weatherDisplay.setScaleOutput(scale);
+    weatherDisplay.setCurrentTempOutput(convertedTemp[units]);
+    weatherDisplay.setScaleOutput(units);
     weatherDisplay.setWeatherImgSrc(
       `http://openweathermap.org/img/wn/${data.icon}@2x.png`
     );
     weatherDisplay.setWeatherImgAltAndTitle(data.main);
     weatherDisplay.setDescriptionOutput(data.description);
-    weatherDisplay.setHighOutput(convertedHigh[scale]);
-    weatherDisplay.setLowOutput(convertedLow[scale]);
+    weatherDisplay.setHighOutput(convertedHigh[units]);
+    weatherDisplay.setLowOutput(convertedLow[units]);
     background.changeBackground(background.images[data.icon]);
   };
 
+  weatherDisplay.unitSlider.label.addEventListener('click', () => {
+    showWeather();
+    save('units', weatherDisplay.unitSlider.getScale());
+  });
+
   showWeather();
 };
+
+(() => {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      getWeather({
+        lat: pos.coords.latitude || 36.174465,
+        lon: pos.coords.longitude || -86.767960,
+      })
+        .then((data) => displayData(data));
+    },
+    // () => {
+    //   getWeather({
+    //     lat: 36.174465,
+    //     lon: -86.767960,
+    //   })
+    //     .then((data) => displayData(data));
+    // }
+  );
+})();
 
 export default weatherDisplay;
 export { displayData };

@@ -1,10 +1,12 @@
+import getLocationName from './callOpenStreetMap';
+
 const key = '2db6a02c5ebe70c03c3c00caa4802366';
 
 const getLocation = async (input) => {
-  // const url = `http://api.openweathermap.org/geo/1.0/direct?q=${input}&appid=${key}`;
+  const url = `http://api.openweathermap.org/geo/1.0/direct?q=${input}&appid=${key}`;
 
-  const url = // TEST
-    'https://raw.githubusercontent.com/ginahend94/weather-app/master/src/test/test.json';
+  // const url = // TEST
+  //   'https://raw.githubusercontent.com/ginahend94/weather-app/master/src/test/test.json';
   try {
     const res = await fetch(url);
     const json = await res.json();
@@ -18,14 +20,21 @@ const getWeather = async (data) => {
   if (!data?.lat || !data?.lon || !data) {
     return console.error('no input');
   }
-  // const url = `https://api.openweathermap.org/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&appid=${key}`;
-  const url = // TEST
-     'https://raw.githubusercontent.com/ginahend94/weather-app/master/src/test/test-weather.json'; // TEST
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${data.lat}&lon=${data.lon}&appid=${key}`;
+  // const url = // TEST
+  //    'https://raw.githubusercontent.com/ginahend94/weather-app/master/src/test/test-weather.json'; // TEST
   // Process JSON data
   try {
     const res = await fetch(url);
     const json = await res.json();
-    return json;
+    const location = await getLocationName({
+      lat: json.coord.lat,
+      lon: json.coord.lon,
+    });
+    return {
+      location,
+      weather: json,
+    };
   } catch (e) {
     console.error(e);
   }
