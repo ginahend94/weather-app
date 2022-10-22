@@ -2,8 +2,6 @@ import loading from '../../assets/images/loading_circle.gif';
 import background from '../background/background';
 import load from '../../functions/load';
 import save from '../../functions/save';
-import { getWeather } from '../../functions/callOpenWeather';
-import getLocationName from '../../functions/callOpenStreetMap';
 
 // TODO - set up call for nashville, TN
 // add client location option
@@ -68,8 +66,7 @@ const weatherDisplay = (() => {
     locationOuput.textContent = text;
     locationOuput.title = text;
   };
-  const setCurrentTempOutput = (text) =>
-    (currentTempOutput.textContent = `${text}${deg}`);
+  const setCurrentTempOutput = (text) => (currentTempOutput.textContent = `${text}${deg}`);
   const setScaleOutput = (text) => (scaleOutput.textContent = text);
   const setWeatherImgSrc = (text) => (weatherImgOutput.src = text);
   const setWeatherImgAltText = (text) => (weatherImgOutput.alt = text);
@@ -78,8 +75,7 @@ const weatherDisplay = (() => {
     setWeatherImgAltText(text);
     setWeatherImgTitle(text);
   };
-  const setDescriptionOutput = (text) =>
-    (descriptionOutput.textContent = text.toLowerCase());
+  const setDescriptionOutput = (text) => (descriptionOutput.textContent = text.toLowerCase());
   const setHighOutput = (text) => (highOutput.textContent = `${text}${deg}`);
   const setLowOutput = (text) => (lowOutput.textContent = `${text}${deg}`);
   const clearOutputs = () => {
@@ -142,8 +138,11 @@ const displayData = (response) => {
     sunset: response.weather.sys.sunset,
     locationName: response.weather.name,
     icon: response.weather.weather[0].icon,
-    city: response.location.address.city,
+    city: response.location.address.city || null,
+    municipality: response.location.municipality || null,
     suburb: response.location.address.suburb || null,
+    town: response.location.address.town || null,
+    village: response.location.address.village || null,
     state: response.location.address.state || null,
     country: response.location.address.country,
   };
@@ -165,11 +164,39 @@ const displayData = (response) => {
   const convertedHigh = (() => convertUnits(data.high))();
   const convertedLow = (() => convertUnits(data.low))();
 
+  const locationString = (() => {
+    if (data.country === 'United States') return `${data.city}, ${data.state}`;
+
+    let a;
+    let b;
+
+    if (data.suburb) {
+      a = `${data.suburb}, `;
+    } else if (data.village) {
+      a = `${data.village}, `;
+    } else if (data.town) {
+      a = `${data.town}, `;
+    } else if (data.city) {
+      a = `${data.city}, `;
+    } else if (data.municipality) {
+      a = `${data.municipality}, `;
+    } else {
+      a = '';
+    }
+
+    if (data.state) {
+      b = data.state;
+    } else if (data.region) {
+      b = data.region;
+    } else {
+      b = data.country;
+    }
+    return `${a}${b}`;
+  })();
+
   const showWeather = () => {
     const units = scale();
-    weatherDisplay.setLocationOutput(
-      `${data.suburb ? data.suburb : data.city}, ${data.state ? data.state : data.country}`
-    );
+    weatherDisplay.setLocationOutput(locationString);
     weatherDisplay.setCurrentTempOutput(convertedTemp[units]);
     weatherDisplay.setScaleOutput(units);
     weatherDisplay.setWeatherImgSrc(
@@ -189,22 +216,6 @@ const displayData = (response) => {
 
   showWeather();
 };
-
-(() => {
-  const initialWeather = (pos) => {
-    getWeather({
-      lat: pos.coords?.latitude || pos.lat,
-      lon: pos.coords?.longitude || pos.lon,
-    }).then((data) => displayData(data));
-  };
-  navigator.geolocation.getCurrentPosition(
-    (pos) => initialWeather(pos),
-    () => initialWeather({
-      lat: 36.174465,
-      lon: -86.76796,
-    })
-  );
-})();
 
 export default weatherDisplay;
 export { displayData };
