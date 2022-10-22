@@ -29,11 +29,7 @@ const locationSearch = (() => {
       // Call weather API
       weatherDisplay.clearOutputs();
       getWeather(getQuery()).then((res) => {
-        const data = {
-          query,
-          json: res,
-        };
-        displayData(data);
+        displayData(res);
         setInput(''); // clear input after
       });
     });
