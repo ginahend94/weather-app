@@ -1,5 +1,6 @@
 import getLocationName from './callOpenStreetMap';
 import weatherDisplay, { displayData } from '../components/main/weatherDisplay';
+import confirmModal from '../components/dialog';
 
 const key = '2db6a02c5ebe70c03c3c00caa4802366';
 
@@ -42,42 +43,35 @@ const getWeather = async (data) => {
   }
 };
 
+const initialWeather = (pos) => {
+  getWeather({
+    lat: pos.coords?.latitude || pos.lat,
+    lon: pos.coords?.longitude || pos.lon,
+  }).then((data) => displayData(data));
+};
 const defaultWeather = () => {
-  const initialWeather = (pos) => {
-    getWeather({
-      lat: pos.coords?.latitude || pos.lat,
-      lon: pos.coords?.longitude || pos.lon,
-    }).then((data) => displayData(data));
-  };
   initialWeather({
     lat: 36.174465,
     lon: -86.76796,
   });
+};
+const getUserLocation = () => {
   navigator.geolocation.getCurrentPosition(
     (pos) => initialWeather(pos),
-    
+    async () => {
+      await confirmModal({
+        title: 'Location needed for weather data',
+        message: 'Your location is needed to get local weather information. Please refresh the page to allow access.\n(This is optional.)',
+        yes: 'Okay',
+        hideNo: true,
+      });
+    }
   );
 };
 
-// TEST
-async function getLondon() {
-  try {
-    const response = await fetch('./test/test.json');
-    const json = await response.json();
-    // console.log(json);
-    return json;
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-const fakeCall = (fn) => {
-  const num = Math.floor(Math.random() * 3000) + 500;
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(fn());
-    }, num);
-  });
+export {
+  getLocation,
+  getWeather,
+  defaultWeather,
+  getUserLocation,
 };
-
-export { getLocation, getWeather, defaultWeather };

@@ -1,4 +1,4 @@
-import { getLocation, getWeather } from '../../functions/callOpenWeather';
+import { getLocation, getUserLocation, getWeather } from '../../functions/callOpenWeather';
 import weatherDisplay, { displayData } from './weatherDisplay';
 
 const locationSearch = (() => {
@@ -56,8 +56,16 @@ const locationSearch = (() => {
     return container;
   })();
 
+  const useMyLocation = (() => {
+    const button = document.createElement('button');
+    button.classList.add('use-location');
+    button.textContent = 'Use my location';
+    button.addEventListener('click', getUserLocation);
+    return button;
+  })();
+
   locationContainer.classList.add('location-search');
-  locationContainer.append(form.container, autocompleteContainer);
+  locationContainer.append(form.container, autocompleteContainer, useMyLocation);
 
   // TODO - add arrow functionality for selecting autocomplete
   const autocomplete = (() => {
