@@ -3,7 +3,6 @@ import background from '../background/background';
 import load from '../../functions/load';
 import save from '../../functions/save';
 
-// TODO - set up call for nashville, TN
 // add client location option
 const weatherDisplay = (() => {
   const container = document.createElement('div');
@@ -15,6 +14,7 @@ const weatherDisplay = (() => {
   const highOutput = document.createElement('span');
   const lowOutput = document.createElement('span');
   const hiLo = document.createElement('div');
+  // TODO - persist units on refresh
   const unitSlider = (() => {
     const label = document.createElement('label');
     const input = document.createElement('input');
@@ -165,8 +165,6 @@ const displayData = (response) => {
   const convertedLow = (() => convertUnits(data.low))();
 
   const locationString = (() => {
-    if (data.country === 'United States') return `${data.city}, ${data.state}`;
-
     let a;
     let b;
 
@@ -184,7 +182,7 @@ const displayData = (response) => {
       a = '';
     }
 
-    if (data.state) {
+    if (data.country === 'United States' || data.state) {
       b = data.state;
     } else if (data.region) {
       b = data.region;
