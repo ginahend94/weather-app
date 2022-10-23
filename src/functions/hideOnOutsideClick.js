@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-use-before-define */
 const hideElement = (element, selector) => {
   const hide = (e) => {
     if (!e.target.closest(selector)) {
