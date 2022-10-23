@@ -130,10 +130,10 @@ const locationSearch = (() => {
     const restartTimeout = () => {
       resetTimeout();
       timeout = newTimeout();
-      console.log(timeout)
+      console.log(timeout);
     };
 
-    console.log(setTimeout(()=>console.log('hi'), 500))
+    console.log(setTimeout(() => console.log('hi'), 500));
 
     return { start: restartTimeout };
   })();
