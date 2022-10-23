@@ -1,0 +1,17 @@
+.custom-modal {
+  background-color:white;
+  border:solid 1px;
+  padding:20px;
+  width:500px;
+  /* position:absolute; */
+  margin:auto;
+  /* z-index:99999999; */
+}
+
+.custom-modal menu {
+  float: right;
+}
+
+.custom-modal:open {
+  display:block;
+}
