@@ -4,20 +4,20 @@ import confirmModal from '../components/dialog';
 
 const key = '2db6a02c5ebe70c03c3c00caa4802366';
 
-const getLocation = async (input) => {
-  // const url = `http://api.openweathermap.org/geo/1.0/direct?q=${input}&appid=${key}&limit=10`;
+// const getLocation = async (input) => {
+//   // const url = `http://api.openweathermap.org/geo/1.0/direct?q=${input}&appid=${key}&limit=10`;
 
-  const url = // TEST
-    'https://raw.githubusercontent.com/ginahend94/weather-app/master/src/test/test.json';
-  try {
-    const res = await fetch(url);
-    const json = await res.json();
-    // console.log(json);
-    return json;
-  } catch (e) {
-    console.error(e);
-  }
-};
+//   const url = // TEST
+//     'https://raw.githubusercontent.com/ginahend94/weather-app/master/src/test/test.json';
+//   try {
+//     const res = await fetch(url);
+//     const json = await res.json();
+//     // console.log(json);
+//     return json;
+//   } catch (e) {
+//     console.error(e);
+//   }
+// };
 
 const getWeather = async (data) => {
   if (!data?.lat || !data?.lon || !data) {
@@ -71,7 +71,6 @@ const getUserLocation = () => {
 };
 
 export {
-  getLocation,
   getWeather,
   defaultWeather,
   getUserLocation,
