@@ -11,4 +11,4 @@ const hideElement = (element, selector) => {
   document.body.addEventListener('click', hide);
 };
 
-export { hideElement };
+export default hideElement;

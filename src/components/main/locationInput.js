@@ -1,7 +1,7 @@
 import { getUserLocation, getWeather } from '../../functions/callOpenWeather';
 import { getLocation } from '../../functions/callOpenStreetMap';
 import weatherDisplay, { displayData } from './weatherDisplay';
-import { hideElement } from '../../functions/hideOnOutsideClick';
+import hideElement from '../../functions/hideOnOutsideClick';
 
 const locationSearch = (() => {
   const locationContainer = document.createElement('div');
