@@ -1,5 +1,7 @@
-import { getLocation, getUserLocation, getWeather } from '../../functions/callOpenWeather';
+import { getUserLocation, getWeather } from '../../functions/callOpenWeather';
+import { getLocation } from '../../functions/callOpenStreetMap';
 import weatherDisplay, { displayData } from './weatherDisplay';
+import { hideElement } from '../../functions/hideOnOutsideClick';
 
 const locationSearch = (() => {
   const locationContainer = document.createElement('div');
@@ -20,7 +22,7 @@ const locationSearch = (() => {
     const setQuery = (location) => (query = location);
     const setQueryAndInput = (location) => {
       setQuery(location);
-      setInput(location.string);
+      setInput(location.display_name);
     };
 
     container.addEventListener('submit', (e) => {
@@ -76,7 +78,8 @@ const locationSearch = (() => {
       const container = autocompleteContainer;
       // create ul for autocomplete list
       const ul = document.createElement('ul');
-      ul.classList.add('autocomplete-list');
+      ul.classList.add('autocomplete-list', 'TEST');
+      hideElement(ul, '.autocomplete-list');
 
       const showContainer = () => (container.style.display = 'block');
       const hideContainer = () => (container.style.display = 'none');
@@ -94,24 +97,16 @@ const locationSearch = (() => {
       showContainer();
 
       list.forEach((item) => {
-        // readable string of location name
-        const string = `${item.name},${item.state ? ` ${item.state},` : ''} ${
-          item.country
-        }`;
-        const itemWithString = {
-          ...item,
-          string,
-        };
-
+        if (!list.length) return ul.append('No locations found.');
         // create li element for each item
         const li = document.createElement('li');
         ul.append(li);
         li.classList.add('autocomplete-item');
-        li.textContent = string;
+        li.textContent = item.display_name;
         li.dataset.lat = item.lat;
         li.dataset.lon = item.lon;
         li.addEventListener('click', () => {
-          form.setQueryAndInput(itemWithString);
+          form.setQueryAndInput(item);
           hideContainer();
         });
       });
@@ -123,17 +118,22 @@ const locationSearch = (() => {
       setTimeout(() => {
         // make api call
         getLocation(form.getInput()).then((res) => showResults(res));
-      }, 500);
+      }, 600);
     };
 
     // if more input, clear timeout
-    const resetTimeout = () => clearTimeout(timeout);
+    const resetTimeout = () => {
+      clearTimeout(timeout);
+    };
 
     // start new timeout
     const restartTimeout = () => {
       resetTimeout();
       timeout = newTimeout();
+      console.log(timeout)
     };
+
+    console.log(setTimeout(()=>console.log('hi'), 500))
 
     return { start: restartTimeout };
   })();
