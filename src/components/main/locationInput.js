@@ -36,7 +36,7 @@ const locationSearch = (() => {
       });
     });
     input.addEventListener('input', () => {
-      if (!getInput()) return;
+      // if (!getInput()) return;
       // eslint-disable-next-line no-use-before-define
       autocomplete.start();
     });
@@ -54,7 +54,6 @@ const locationSearch = (() => {
   const autocompleteContainer = (() => {
     const container = document.createElement('div');
     container.classList.add('autocomplete-container');
-    container.textContent = 'Autocomplete results here';
     return container;
   })();
 
@@ -67,7 +66,11 @@ const locationSearch = (() => {
   })();
 
   locationContainer.classList.add('location-search');
-  locationContainer.append(form.container, autocompleteContainer, useMyLocation);
+  locationContainer.append(
+    form.container,
+    autocompleteContainer,
+    useMyLocation
+  );
 
   // TODO - add arrow functionality for selecting autocomplete
   const autocomplete = (() => {
@@ -96,8 +99,13 @@ const locationSearch = (() => {
       // otherwise, show box if closed
       showContainer();
 
+      if (!list.length) {
+        const noResults = document.createElement('li');
+        noResults.classList.add('no-hover', 'autocomplete-item');
+        noResults.textContent = 'No locations found.';
+        ul.append(noResults);
+      }
       list.forEach((item) => {
-        if (!list.length) return ul.append('No locations found.');
         // create li element for each item
         const li = document.createElement('li');
         ul.append(li);
@@ -115,6 +123,10 @@ const locationSearch = (() => {
 
     // on input start timeout
     const newTimeout = () => {
+      if (!form.getInput()) {
+        showResults();
+        return;
+      }
       setTimeout(() => {
         // make api call
         getLocation(form.getInput()).then((res) => showResults(res));
@@ -123,17 +135,16 @@ const locationSearch = (() => {
 
     // if more input, clear timeout
     const resetTimeout = () => {
+      if (!timeout) return;
       clearTimeout(timeout);
+      timeout = null;
     };
 
     // start new timeout
     const restartTimeout = () => {
       resetTimeout();
       timeout = newTimeout();
-      console.log(timeout);
     };
-
-    console.log(setTimeout(() => console.log('hi'), 500));
 
     return { start: restartTimeout };
   })();

@@ -118,11 +118,11 @@ button.use-location {
 .autocomplete-item {
   padding: 5px 10px;
   margin: 0;
-  cursor: pointer;
   transition: .2s;
 }
-.autocomplete-item:hover {
+.autocomplete-item:not(.no-hover):hover {
   background-color: rgba(0,0,0,.08);
+  cursor: pointer;
 }
 
 .clock {
