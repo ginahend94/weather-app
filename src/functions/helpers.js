@@ -25,8 +25,8 @@ const createLink = (opts) => {
   const a = document.createElement('a');
   a.append(opts.text);
   a.setAttribute('href', opts.href);
+  a.target = '_blank';
   if (opts.title) a.title = opts.title;
-  if (opts.newTab) a.target = '_blank';
   return a;
 };
 
