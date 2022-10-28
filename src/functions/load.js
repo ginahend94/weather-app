@@ -3,5 +3,5 @@ export default (name) => {
     // console.log('You haven\'t created this value yet.')
     return false;
   }
-  return JSON.parse(sessionStorage.getItem(name));
+  return JSON.parse(localStorage.getItem(name));
 };
