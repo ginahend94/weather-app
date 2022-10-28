@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "date-fns": "^2.29.3",
+    "iconify-icon": "^1.0.1",
     "normalize-css": "^2.3.1"
   }
 }

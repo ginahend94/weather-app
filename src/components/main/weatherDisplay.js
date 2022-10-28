@@ -32,7 +32,6 @@ const weatherDisplay = (() => {
 
     if (load('units')) {
       console.log(load('units'));
-      console.log(load('units'));
       input.checked = load('units');
     } else save('units', input.checked);
 
