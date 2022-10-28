@@ -1,7 +1,6 @@
 import loading from '../../assets/images/loading_circle.gif';
 import background from '../background/background';
-import load from '../../functions/load';
-import save from '../../functions/save';
+import { save, load } from '../../functions/helpers';
 
 // add client location option
 const weatherDisplay = (() => {
@@ -30,14 +29,16 @@ const weatherDisplay = (() => {
     fahrenheit.textContent = 'Fahrenheit';
     fahrenheit.classList.add('fahrenheit');
 
-    if (load('units')) {
-      console.log(load('units'));
-      input.checked = load('units');
-    } else save('units', input.checked);
+    if (!load('units')) {
+      save('units', input.checked);
+    }
+    const units = load('units');
+    input.checked = units;
 
     const getScale = () => input.checked;
+    const setScale = () => save('units', input.checked);
 
-    input.addEventListener('input', getScale);
+    input.addEventListener('input', setScale);
 
     slider.append(celsius, fahrenheit);
     label.append(input, slider);
