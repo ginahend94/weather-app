@@ -71,7 +71,7 @@ const weatherDisplay = (() => {
   const setClockOutput = (countryCode) => {
     clockOutput.innerHTML = '';
     clockOutput.append(clock(countryCode));
-  }
+  };
   const setCurrentTempOutput = (text) => (currentTempOutput.textContent = `${text}${deg}`);
   const setScaleOutput = (text) => (scaleOutput.textContent = text);
   const setWeatherImgSrc = (text) => (weatherImgOutput.src = text);
