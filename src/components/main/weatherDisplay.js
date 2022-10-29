@@ -68,8 +68,9 @@ const weatherDisplay = (() => {
     locationOuput.textContent = text;
     locationOuput.title = text;
   };
+  const clearClockOutput = () => (clockOutput.innerHTML = '');
   const setClockOutput = (countryCode) => {
-    clockOutput.innerHTML = '';
+    clearClockOutput();
     clockOutput.append(clock(countryCode));
   };
   const setCurrentTempOutput = (text) => (currentTempOutput.textContent = `${text}${deg}`);
@@ -84,8 +85,10 @@ const weatherDisplay = (() => {
   const setDescriptionOutput = (text) => (descriptionOutput.textContent = text.toLowerCase());
   const setHighOutput = (text) => (highOutput.textContent = `${text}${deg}`);
   const setLowOutput = (text) => (lowOutput.textContent = `${text}${deg}`);
+
   const clearOutputs = () => {
     setLocationOutput('');
+    clearClockOutput();
     setCurrentTempOutput('');
     setScaleOutput('');
     setWeatherImgSrc(loading);
