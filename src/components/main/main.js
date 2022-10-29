@@ -9,7 +9,7 @@ export default (() => {
   const container = document.createElement('main');
   container.append(
     locationInput.container,
-    clock,
+    clock(),
     weatherDisplay.container,
     // todoList,
     // calendar,

@@ -1,11 +1,13 @@
 import loading from '../../assets/images/loading_circle.gif';
 import background from '../background/background';
 import { save, load } from '../../functions/helpers';
+import clock from './clock';
 
 // add client location option
 const weatherDisplay = (() => {
   const container = document.createElement('div');
   const locationOuput = document.createElement('h2');
+  const clockOutput = document.createElement('div');
   const currentTempOutput = document.createElement('h3');
   const scaleOutput = document.createElement('span');
   const weatherImgOutput = document.createElement('img');
@@ -66,6 +68,10 @@ const weatherDisplay = (() => {
     locationOuput.textContent = text;
     locationOuput.title = text;
   };
+  const setClockOutput = (countryCode) => {
+    clockOutput.innerHTML = '';
+    clockOutput.append(clock(countryCode));
+  }
   const setCurrentTempOutput = (text) => (currentTempOutput.textContent = `${text}${deg}`);
   const setScaleOutput = (text) => (scaleOutput.textContent = text);
   const setWeatherImgSrc = (text) => (weatherImgOutput.src = text);
@@ -102,6 +108,7 @@ const weatherDisplay = (() => {
 
   container.append(
     locationOuput,
+    clockOutput,
     currentTempOutput,
     hiLo,
     weatherImgOutput,
@@ -112,6 +119,7 @@ const weatherDisplay = (() => {
   return {
     container,
     setLocationOutput,
+    setClockOutput,
     setCurrentTempOutput,
     setScaleOutput,
     setWeatherImgSrc,
@@ -126,6 +134,7 @@ const weatherDisplay = (() => {
 
 // Display data
 const displayData = (response) => {
+  console.log(response);
   const data = {
     lat: response.weather.coord.lat,
     lon: response.weather.coord.lon,
@@ -145,6 +154,7 @@ const displayData = (response) => {
     village: response.location.address.village || null,
     state: response.location.address.state || null,
     country: response.location.address.country,
+    timezone: response.weather.timezone,
   };
 
   // checked is F, unchecked is C
@@ -195,6 +205,7 @@ const displayData = (response) => {
   const showWeather = () => {
     const units = scale();
     weatherDisplay.setLocationOutput(locationString);
+    weatherDisplay.setClockOutput(data.timezone);
     weatherDisplay.setCurrentTempOutput(convertedTemp[units]);
     weatherDisplay.setScaleOutput(units);
     weatherDisplay.setWeatherImgSrc(
