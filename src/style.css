@@ -40,6 +40,16 @@ h1, h2, h3 {
   margin:0;
 }
 
+a {
+  color:inherit;
+  opacity:.6;
+  transition: .2s;
+}
+
+a:hover {
+  opacity: 1;
+}
+
 header {
   background-color: rgba(255, 255, 255,.2);
   box-shadow: 0 1px 5px rgba(0,0,0,.2);
@@ -48,6 +58,13 @@ header {
   width: 100%;
   padding: 20px;
   font-family:var(--heading);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .clock {
+  font-family: var(--body);
 }
 
 main {
@@ -63,6 +80,7 @@ main {
   box-shadow: 1px 1px 10px rgba(0,0,0,.1);
   backdrop-filter: blur(5px);
   border-radius: 5px;
+  max-width:1000px;
 }
 
 .location-input {
@@ -215,4 +233,11 @@ footer {
   padding: 40px 30px;
   background-color: rgba(255,255,255, .2);
   backdrop-filter: blur(5px);
+  display: flex;
+  gap:10px;
+  align-items: center;
+}
+
+footer iconify-icon {
+  font-size: 1.5rem;
 }
