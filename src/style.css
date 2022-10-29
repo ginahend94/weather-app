@@ -154,7 +154,8 @@ button.use-location {
   justify-content: center;
 }
 .weather-display .location {
-  font-family: var(--heading);
+  /* font-family: var(--heading); */
+  font-style: italic;
   font-size:2rem;
   text-transform: lowercase;
 }
