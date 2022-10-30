@@ -60,7 +60,7 @@ const locationSearch = (() => {
     input.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'Enter') return;
       if (autocompleteContainer.style.display !== 'block') {
-        return console.log('nothing here');
+        return;
       }
       if (e.key === 'Enter' && !selected) return;
       const list = [...autocompleteContainer.querySelector('ul').children];
@@ -186,10 +186,6 @@ const locationSearch = (() => {
         li.addEventListener('click', () => {
           form.setQueryAndInput(item);
           hideContainer();
-        });
-        li.addEventListener('keypress', (e) => {
-          if (e.key !== 'Enter') return;
-          console.log(item);
         });
       });
       return {
