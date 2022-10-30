@@ -13,7 +13,7 @@ export default (timeZone = '') => {
 
   const updateClock = () => {
     const today = new Date();
-    if (timeZone) {
+    if (typeof timeZone === 'number') {
       // console.log(convertTimeZone(timeZone))
       time.textContent = format(convertTimeZone(timeZone), 'p').toLowerCase();
     } else {
