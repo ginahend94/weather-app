@@ -127,22 +127,34 @@ const locationSearch = (() => {
         showResults();
         return;
       }
-      setTimeout(() => {
+      return setTimeout(() => {
         // make api call
-        getLocation(form.getInput()).then((res) => showResults(res));
+        getLocation(form.getInput()).then((res) => {
+          console.log(res);
+          showResults(res);
+        });
       }, 600);
     };
 
+    const searchForLocation = () => {
+
+    }
+
     // if more input, clear timeout
     const resetTimeout = () => {
-      if (!timeout) return;
+      if (!timeout) {
+        console.log('no timeout');
+        // return;
+      }
       clearTimeout(timeout);
       timeout = null;
     };
 
     // start new timeout
     const restartTimeout = () => {
-      resetTimeout();
+      // resetTimeout();
+      console.log(timeout);
+      clearTimeout(timeout);
       timeout = newTimeout();
     };
 

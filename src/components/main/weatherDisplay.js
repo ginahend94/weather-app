@@ -137,7 +137,6 @@ const weatherDisplay = (() => {
 
 // Display data
 const displayData = (response) => {
-  console.log(response);
   const data = {
     lat: response.weather.coord.lat,
     lon: response.weather.coord.lon,

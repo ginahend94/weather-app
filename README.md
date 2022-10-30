@@ -1,4 +1,5 @@
 # Weather
 Future features:
-Fix search calling too many times
 Fix page overflow
+display loading results
+search for input
