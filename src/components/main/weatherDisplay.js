@@ -116,7 +116,7 @@ const weatherDisplay = (() => {
     hiLo,
     weatherImgOutput,
     descriptionOutput,
-    unitSlider.label
+    unitSlider.label,
   );
 
   return {
@@ -149,15 +149,16 @@ const displayData = (response) => {
     sunset: response.weather.sys.sunset,
     locationName: response.weather.name,
     icon: response.weather.weather[0].icon,
-    city: response.location.address.city || null,
+    city: response.location.address?.city || null,
     municipality: response.location.municipality || null,
-    suburb: response.location.address.suburb || null,
-    town: response.location.address.town || null,
-    village: response.location.address.village || null,
-    state: response.location.address.state || null,
-    country: response.location.address.country,
+    suburb: response.location.address?.suburb || null,
+    town: response.location.address?.town || null,
+    village: response.location.address?.village || null,
+    state: response.location.address?.state || null,
+    country: response.location.address?.country,
     timezone: response.weather.timezone,
   };
+  console.log(data);
 
   // checked is F, unchecked is C
   const scale = () => (weatherDisplay.unitSlider.getScale() ? 'f' : 'c');
@@ -180,14 +181,14 @@ const displayData = (response) => {
     let a;
     let b;
 
-    if (data.suburb) {
-      a = `${data.suburb}, `;
+    if (data.city) {
+      a = `${data.city}, `;
     } else if (data.village) {
       a = `${data.village}, `;
     } else if (data.town) {
       a = `${data.town}, `;
-    } else if (data.city) {
-      a = `${data.city}, `;
+    } else if (data.suburb) {
+      a = `${data.suburb}, `;
     } else if (data.municipality) {
       a = `${data.municipality}, `;
     } else {
@@ -195,11 +196,12 @@ const displayData = (response) => {
     }
 
     if (data.country === 'United States' || data.state) {
+      if (!a) return `${data.state}, ${data.country}`;
       b = data.state;
     } else if (data.region) {
       b = data.region;
     } else {
-      b = data.country;
+      b = data.country || data.locationName || '(no location name available)';
     }
     return `${a}${b}`;
   })();
@@ -207,7 +209,7 @@ const displayData = (response) => {
   const showWeather = () => {
     const units = scale();
     weatherDisplay.setLocationOutput(locationString);
-    weatherDisplay.setClockOutput(data.timezone);
+    if (typeof data.timezone === 'number') weatherDisplay.setClockOutput(data.timezone);
     weatherDisplay.setCurrentTempOutput(convertedTemp[units]);
     weatherDisplay.setScaleOutput(units);
     weatherDisplay.setWeatherImgSrc(
