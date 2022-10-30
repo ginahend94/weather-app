@@ -48,22 +48,60 @@ const locationSearch = (() => {
     };
     container.addEventListener('keypress', (e) => {
       if (e.key !== 'Enter') return;
-      setQuery(getInput());
+      if (!getInput()) return;
+      if (!getQuery()) setQuery(getInput());
       submitForm(e);
     });
     container.addEventListener('submit', (e) => {
       submitForm(e);
-      // e.preventDefault();
-      // if (!getQuery()) return;
-      // // Call weather API
-      // weatherDisplay.clearOutputs();
-      // getWeather(getQuery()).then((res) => {
-      //   displayData(res);
-      //   setInput(''); // clear input after
-      // });
+    });
+
+    let selected = null;
+    input.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'Enter') return;
+      if (autocompleteContainer.style.display !== 'block') {
+        return console.log('nothing here');
+      }
+      if (e.key === 'Enter' && !selected) return;
+      const list = [...autocompleteContainer.querySelector('ul').children];
+      const unselect = () => {
+        list.forEach((a) => a.classList.remove('selected'));
+        selected = null;
+      };
+      const select = (item) => {
+        unselect();
+        item?.classList.add('selected');
+        selected = item;
+      };
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (!selected) {
+          // highlight last item
+          select(list[list.length - 1]);
+        } else if ((selected === list[0])) {
+          unselect();
+          input.focus();
+        } else {
+          select(selected.previousSibling);
+        }
+      }
+      if (e.key === 'ArrowDown') {
+        if (!selected) {
+          // highlight first item
+          select(list[0]);
+        } else if (selected === list[list.length - 1]) {
+          unselect();
+          input.focus();
+        } else {
+          select(selected.nextSibling || null);
+        }
+      }
+      if (e.key === 'Enter') {
+        selected.click();
+        unselect();
+      }
     });
     input.addEventListener('input', () => {
-      // if (!getInput()) return;
       // eslint-disable-next-line no-use-before-define
       autocomplete.start();
     });
@@ -125,7 +163,8 @@ const locationSearch = (() => {
       const loadingText = (() => {
         const text = document.createElement('span');
         text.classList.add('loading-indicator');
-        text.innerHTML = 'Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
+        text.innerHTML =
+          'Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
         return text;
       })();
 
@@ -147,6 +186,10 @@ const locationSearch = (() => {
         li.addEventListener('click', () => {
           form.setQueryAndInput(item);
           hideContainer();
+        });
+        li.addEventListener('keypress', (e) => {
+          if (e.key !== 'Enter') return;
+          console.log(item);
         });
       });
       return {

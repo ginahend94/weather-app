@@ -136,7 +136,7 @@ button.use-location {
   margin: 0;
   transition: .2s;
 }
-.autocomplete-item:not(.no-hover):hover {
+.autocomplete-item:not(.no-hover):hover, .autocomplete-item:not(.no-hover).selected {
   background-color: rgba(0,0,0,.08);
   cursor: pointer;
 }

@@ -1,6 +1,3 @@
-// TODO - import time
-// TODO - import weather
-
 export default (() => {
   const container = document.createElement('div');
   container.classList.add('background');

@@ -15,7 +15,6 @@ const weatherDisplay = (() => {
   const highOutput = document.createElement('span');
   const lowOutput = document.createElement('span');
   const hiLo = document.createElement('div');
-  // TODO - persist units on refresh
   const unitSlider = (() => {
     const label = document.createElement('label');
     const input = document.createElement('input');
