@@ -158,7 +158,6 @@ const displayData = (response) => {
     country: response.location.address?.country,
     timezone: response.weather.timezone,
   };
-  console.log(data);
 
   // checked is F, unchecked is C
   const scale = () => (weatherDisplay.unitSlider.getScale() ? 'f' : 'c');
