@@ -124,37 +124,24 @@ const locationSearch = (() => {
     // on input start timeout
     const newTimeout = () => {
       if (!form.getInput()) {
-        showResults();
-        return;
+        return showResults();
       }
       return setTimeout(() => {
         // make api call
-        getLocation(form.getInput()).then((res) => {
-          console.log(res);
-          showResults(res);
-        });
+        getLocation(form.getInput()).then((res) => showResults(res));
       }, 600);
     };
 
-    const searchForLocation = () => {
-
-    }
-
     // if more input, clear timeout
     const resetTimeout = () => {
-      if (!timeout) {
-        console.log('no timeout');
-        // return;
-      }
+      if (!timeout) return;
       clearTimeout(timeout);
       timeout = null;
     };
 
     // start new timeout
     const restartTimeout = () => {
-      // resetTimeout();
-      console.log(timeout);
-      clearTimeout(timeout);
+      resetTimeout();
       timeout = newTimeout();
     };
 
