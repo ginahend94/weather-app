@@ -7,6 +7,15 @@ import './loading.css';
 const locationSearch = (() => {
   const locationContainer = document.createElement('div');
 
+  const autocompleteContainer = (() => {
+    const container = document.createElement('div');
+    container.classList.add('autocomplete-container');
+    return container;
+  })();
+
+  const showContainer = () => (autocompleteContainer.style.display = 'block');
+  const hideContainer = () => (autocompleteContainer.style.display = 'none');
+
   const form = (() => {
     const container = document.createElement('form');
     const input = document.createElement('input');
@@ -23,10 +32,11 @@ const locationSearch = (() => {
     const setQuery = (location) => (query = location);
     const setQueryAndInput = (location) => {
       setQuery(location);
-      setInput(location.display_name);
+      setInput(location.display_name || location);
     };
 
-    container.addEventListener('submit', (e) => {
+    const submitForm = (e) => {
+      hideContainer();
       e.preventDefault();
       if (!getQuery()) return;
       // Call weather API
@@ -35,6 +45,22 @@ const locationSearch = (() => {
         displayData(res);
         setInput(''); // clear input after
       });
+    };
+    container.addEventListener('keypress', (e) => {
+      if (e.key !== 'Enter') return;
+      setQuery(getInput());
+      submitForm(e);
+    });
+    container.addEventListener('submit', (e) => {
+      submitForm(e);
+      // e.preventDefault();
+      // if (!getQuery()) return;
+      // // Call weather API
+      // weatherDisplay.clearOutputs();
+      // getWeather(getQuery()).then((res) => {
+      //   displayData(res);
+      //   setInput(''); // clear input after
+      // });
     });
     input.addEventListener('input', () => {
       // if (!getInput()) return;
@@ -51,13 +77,6 @@ const locationSearch = (() => {
       setQueryAndInput,
     };
   })();
-
-  const autocompleteContainer = (() => {
-    const container = document.createElement('div');
-    container.classList.add('autocomplete-container');
-    return container;
-  })();
-
   const useMyLocation = (() => {
     const button = document.createElement('button');
     button.classList.add('use-location');
@@ -84,9 +103,6 @@ const locationSearch = (() => {
       const ul = document.createElement('ul');
       ul.classList.add('autocomplete-list', 'TEST');
       hideElement(ul, '.autocomplete-list');
-
-      const showContainer = () => (container.style.display = 'block');
-      const hideContainer = () => (container.style.display = 'none');
 
       // remove old results and add new
       container.innerHTML = '';
@@ -133,7 +149,9 @@ const locationSearch = (() => {
           hideContainer();
         });
       });
-      return ul;
+      return {
+        hideContainer,
+      };
     };
 
     // on input start timeout
@@ -163,7 +181,10 @@ const locationSearch = (() => {
       timeout = newTimeout();
     };
 
-    return { start: restartTimeout };
+    return {
+      hideContainer,
+      start: restartTimeout,
+    };
   })();
 
   return {
@@ -173,28 +194,3 @@ const locationSearch = (() => {
 })();
 
 export default locationSearch;
-
-/** !SECTION
- * const span = document.querySelector("span");
-const setText = (text) => span.append(text);
-const text = document.createElement("span");
-text.innerHTML =
-  'Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
-const dots = text.querySelectorAll(".dot");
-const displayLoading = () => {
-  let interval = null;
-  let opacity = 0;
-  const pulse = (dot) => {
-    console.log(dot)
-    if (opacity >= 1) opacity = 0;
-    dot.style.opacity = opacity;
-    opacity += .01;
-  };
-  const startPulse = (dot) => setInterval(() => pulse(dot), 1);
-  dots.forEach((dot, i) => {
-    setTimeout(() => startPulse(dot), i * 500);
-  })
-};
-displayLoading();
-setText(text);
- */
