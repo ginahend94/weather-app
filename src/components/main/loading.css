@@ -1,0 +1,29 @@
+.loading-indicator .dot {
+  font-weight: bold;
+  animation: blink 2s infinite;
+  display: inline-block;
+  margin:0 2px;
+  opacity:0;
+}
+
+.loading-indicator .dot:nth-child(2) {
+  animation-delay: 0.333s;
+}
+
+.loading-indicator .dot:last-child {
+  animation-delay: 0.667s;
+}
+
+@keyframes blink {
+  0% {
+      opacity: 0;
+  }
+
+  50% {
+      opacity:1;
+  }
+
+  100% {
+      opacity: 0;
+  }
+}

@@ -2,6 +2,7 @@ import { getUserLocation, getWeather } from '../../functions/callOpenWeather';
 import { getLocation } from '../../functions/callOpenStreetMap';
 import weatherDisplay, { displayData } from './weatherDisplay';
 import { hideElement } from '../../functions/helpers';
+import './loading.css';
 
 const locationSearch = (() => {
   const locationContainer = document.createElement('div');
@@ -92,18 +93,32 @@ const locationSearch = (() => {
       container.append(ul);
 
       // close box if no input
-      if (!form.getInput()) {
+      if (!form.getInput().trim()) {
         return hideContainer();
       }
 
       // otherwise, show box if closed
       showContainer();
 
-      if (!list.length) {
+      const listPlaceholder = (text) => {
         const noResults = document.createElement('li');
         noResults.classList.add('no-hover', 'autocomplete-item');
-        noResults.textContent = 'No locations found.';
+        noResults.append(text);
         ul.append(noResults);
+      };
+      const loadingText = (() => {
+        const text = document.createElement('span');
+        text.classList.add('loading-indicator');
+        text.innerHTML = 'Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
+        return text;
+      })();
+
+      if (list === 'loading') {
+        return listPlaceholder(loadingText);
+      }
+
+      if (!list.length) {
+        listPlaceholder('No locations found.');
       }
       list.forEach((item) => {
         // create li element for each item
@@ -123,8 +138,11 @@ const locationSearch = (() => {
 
     // on input start timeout
     const newTimeout = () => {
+      showResults('loading');
       if (!form.getInput()) {
         return showResults();
+        // console.log('empty');
+        // return;
       }
       return setTimeout(() => {
         // make api call
@@ -155,3 +173,28 @@ const locationSearch = (() => {
 })();
 
 export default locationSearch;
+
+/** !SECTION
+ * const span = document.querySelector("span");
+const setText = (text) => span.append(text);
+const text = document.createElement("span");
+text.innerHTML =
+  'Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
+const dots = text.querySelectorAll(".dot");
+const displayLoading = () => {
+  let interval = null;
+  let opacity = 0;
+  const pulse = (dot) => {
+    console.log(dot)
+    if (opacity >= 1) opacity = 0;
+    dot.style.opacity = opacity;
+    opacity += .01;
+  };
+  const startPulse = (dot) => setInterval(() => pulse(dot), 1);
+  dots.forEach((dot, i) => {
+    setTimeout(() => startPulse(dot), i * 500);
+  })
+};
+displayLoading();
+setText(text);
+ */
