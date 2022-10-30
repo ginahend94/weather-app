@@ -26,7 +26,6 @@ const confirmModal = async (options) => {
 
   const hideBox = () => {
     box.container.close();
-    // document.body.removeChild(box.container);
   };
 
   return new Promise((resolve) => {

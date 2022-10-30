@@ -3,7 +3,6 @@ import background from '../background/background';
 import { save, load } from '../../functions/helpers';
 import clock from './clock';
 
-// add client location option
 const weatherDisplay = (() => {
   const container = document.createElement('div');
   const locationOuput = document.createElement('h2');
@@ -97,7 +96,8 @@ const weatherDisplay = (() => {
     setLowOutput('');
   };
 
-  setLocationOutput('Nashville, TN');
+  setLocationOutput('Anytown, United States');
+  setClockOutput(-18000);
   setCurrentTempOutput('60');
   setScaleOutput('F');
   setWeatherImgSrc('http://openweathermap.org/img/wn/01d@2x.png');

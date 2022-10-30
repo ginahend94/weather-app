@@ -1,10 +1,6 @@
 export default (() => {
   const container = document.createElement('div');
   container.classList.add('background');
-  // set bg color based on time of day
-  // bg img based on weather
-  // animated sheep/small animal
-  // tree/landscape
   const imgObj = {};
   const importAll = (r) => {
     const keys = r.keys();
@@ -14,10 +10,9 @@ export default (() => {
       imgObj[key] = url;
     });
   };
-  importAll(
+  importAll( // import all background images
     require.context('../../assets/images/weather-photos', false, /\.jpg$/)
   );
-  // console.log(imgObj);
 
   const changeBackground = (url) => {
     container.style.backgroundImage = `url(${url})`;

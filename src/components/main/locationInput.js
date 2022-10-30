@@ -38,7 +38,7 @@ const locationSearch = (() => {
     const submitForm = (e) => {
       hideContainer();
       e.preventDefault();
-      if (!getQuery()) return;
+      if (!getQuery()) return; // cancel if there's no query
       // Call weather API
       weatherDisplay.clearOutputs();
       getWeather(getQuery()).then((res) => {
@@ -47,9 +47,9 @@ const locationSearch = (() => {
       });
     };
     container.addEventListener('keypress', (e) => {
-      if (e.key !== 'Enter') return;
-      if (!getInput()) return;
-      if (!getQuery()) setQuery(getInput());
+      if (e.key !== 'Enter') return; // cancel if not trying to submit
+      if (!getInput()) return; // cancel if input is empty
+      if (!getQuery()) setQuery(getInput()); // set query to what was typed
       submitForm(e);
     });
     container.addEventListener('submit', (e) => {
@@ -59,10 +59,8 @@ const locationSearch = (() => {
     let selected = null;
     input.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'Enter') return;
-      if (autocompleteContainer.style.display !== 'block') {
-        return;
-      }
-      if (e.key === 'Enter' && !selected) return;
+      if (autocompleteContainer.style.display !== 'block') return; // cancel if no autocomplete options
+      if (e.key === 'Enter' && !selected) return; // cancel if nothing is selected
       const list = [...autocompleteContainer.querySelector('ul').children];
       const unselect = () => {
         list.forEach((a) => a.classList.remove('selected'));
@@ -74,20 +72,18 @@ const locationSearch = (() => {
         selected = item;
       };
       if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        if (!selected) {
-          // highlight last item
-          select(list[list.length - 1]);
-        } else if ((selected === list[0])) {
+        e.preventDefault(); // stop cursor from going to beginning of input
+        if (!selected) { // nothing is selected
+          select(list[list.length - 1]); // select last item
+        } else if ((selected === list[0])) { // first item is selected
           unselect();
           input.focus();
-        } else {
-          select(selected.previousSibling);
+        } else { // any other item is selected
+          select(selected.previousSibling || null); // if no previous sibling, unselect
         }
       }
       if (e.key === 'ArrowDown') {
         if (!selected) {
-          // highlight first item
           select(list[0]);
         } else if (selected === list[list.length - 1]) {
           unselect();
@@ -97,7 +93,7 @@ const locationSearch = (() => {
         }
       }
       if (e.key === 'Enter') {
-        selected.click();
+        selected.click(); // choose selected item
         unselect();
       }
     });
@@ -198,8 +194,6 @@ const locationSearch = (() => {
       showResults('loading');
       if (!form.getInput()) {
         return showResults();
-        // console.log('empty');
-        // return;
       }
       return setTimeout(() => {
         // make api call
